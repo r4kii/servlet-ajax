@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sample</title>
+</head>
+<body>
+
+<script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
+
+<h1>Welcome Hari</h1>
+
+<button type="button" value="Add User" id="adduser"> Add user</button>
+
+<table id="userstable">
+ 
+  
+</table>
+<script>
+
+$("#adduser").click(function(){
+	addUser("Ajay")
+})
+
+fetchUsers = function() {
+    var userAjaxObject = {
+        "url" : "/Test/Users",
+        "method" : "GET"
+    };
+    $.ajax(userAjaxObject).done(function(response) {
+    	renderUsers(response)
+    });
+};
+
+renderUsers = function(users)
+{
+	var html = "<tr><th>Name</th></tr>";
+	
+	users = JSON.parse(users);
+	for (i=0; i < users.length; i++)
+	{
+		var user = users[i];
+		
+		html += "<tr><th>"+user.name+"</th></tr>";
+	}
+	
+	$("#userstable").html(html);
+}
+
+fetchUsers();
+
+
+addUser = function(name)
+{
+	var userAjaxObject = {
+	        "url" : "/users?name="+name,
+	        "method" : "POST",
+	    };
+	    $.ajax(userAjaxObject).done(function(response) {
+	    	addUserToTable(response);
+	    });
+}
+
+addUserToTable = function(user)
+{
+	user = JSON.parse(user);
+	html = "<tr><th>"+user.name+"</th></tr>";
+	
+	$("#userstable").append(html);
+}
+
+</script>
+
+</body>
+</html>
